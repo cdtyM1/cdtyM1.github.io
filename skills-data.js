@@ -63,54 +63,69 @@ window.PORTFOLIO_SKILLS = [
   }
 ];
 
-/*
- * Recent certified projects are injected here so new portfolio evidence can be
- * added without deleting or rewriting older project cards in index.html.
- */
+/* Certified projects added dynamically so older cards stay untouched. */
 (function () {
-  const projectCopy = {
+  const copy = {
     id: {
-      tataDesc: 'Job simulation Forage tentang data cleaning, pemilihan visual, analisis revenue dan demand geografis, serta komunikasi insight untuk keputusan ekspansi.',
-      labelDesc: 'Job simulation Forage yang mencakup batch labeling, PII awareness, review, quality control, dan iteration.'
+      tata: 'Job simulation Forage tentang data cleaning, pemilihan visual, analisis revenue dan demand geografis, serta komunikasi insight untuk keputusan ekspansi.',
+      label: 'Job simulation Forage yang mencakup batch labeling, PII awareness, review, quality control, dan iteration.'
     },
     en: {
-      tataDesc: 'Forage job simulation covering data cleaning, visual selection, revenue and geographic-demand analysis, and communicating insights for expansion decisions.',
-      labelDesc: 'Forage job simulation covering batch labelling, PII awareness, review, quality control, and iteration.'
+      tata: 'Forage job simulation covering data cleaning, visual selection, revenue and geographic-demand analysis, and communicating insights for expansion decisions.',
+      label: 'Forage job simulation covering batch labelling, PII awareness, review, quality control, and iteration.'
     }
   };
 
-  function language() {
+  function lang() {
     return document.documentElement.lang === 'en' || localStorage.getItem('lang') === 'en' ? 'en' : 'id';
   }
 
-  function projectCard(kind) {
-    const lang = language();
-    const c = projectCopy[lang];
-    if (kind === 'tata') {
-      return `<article class="project reveal injected-project" data-injected-project="tata"><div class="visual analyticsMock"><div class="analyticsTitle">TATA · DATA VISUALISATION</div><div class="metric"><b>4</b><span>${lang === 'en' ? 'business questions analysed' : 'pertanyaan bisnis dianalisis'}</span></div><div class="metric"><b>11 Sep</b><span>${lang === 'en' ? 'certificate completed' : 'sertifikat selesai'}</span></div><div class="bars"><i></i><i></i><i></i><i></i></div></div><div class="body"><div class="topline"><span class="kicker">Data visualisation</span><span class="status">${lang === 'en' ? 'COMPLETED · SEP 2026' : 'SELESAI · SEP 2026'}</span></div><h3>Tata Data Visualisation: Empowering Business with Effective Insights</h3><p>${c.tataDesc}</p><div class="tags"><span class="tag">Data Cleaning</span><span class="tag">Visualisation</span><span class="tag">Business Insights</span><span class="tag">Executive Communication</span></div><div class="projectActions"><a class="btn primary small" href="tata-data-visualisation.html">${lang === 'en' ? 'View Case Study ↗' : 'Lihat Case Study ↗'}</a></div></div></article>`;
-    }
-    return `<article class="project reveal injected-project" data-injected-project="label"><div class="visual analyticsMock"><div class="analyticsTitle">FORAGE ACADEMY · DATA LABELING</div><div class="metric"><b>PII</b><span>${lang === 'en' ? 'privacy awareness' : 'kesadaran privasi'}</span></div><div class="metric"><b>QC</b><span>${lang === 'en' ? 'review & iteration' : 'review & iteration'}</span></div><div class="bars"><i></i><i></i><i></i><i></i></div></div><div class="body"><div class="topline"><span class="kicker">Data quality</span><span class="status">${lang === 'en' ? 'COMPLETED · SEP 2026' : 'SELESAI · SEP 2026'}</span></div><h3>Forage Academy Data Labeling Job Simulation</h3><p>${c.labelDesc}</p><div class="tags"><span class="tag">Data Labeling</span><span class="tag">PII Awareness</span><span class="tag">Quality Control</span><span class="tag">Consistency Review</span></div><div class="projectActions"><a class="btn primary small" href="data-labeling.html">${lang === 'en' ? 'View Case Study ↗' : 'Lihat Case Study ↗'}</a></div></div></article>`;
+  function tataCard(l) {
+    return `<article class="project injected-project show" data-injected-project="tata"><div class="visual analyticsMock"><div class="analyticsTitle">TATA · DATA VISUALISATION</div><div class="metric"><b>4</b><span>${l === 'en' ? 'business questions analysed' : 'pertanyaan bisnis dianalisis'}</span></div><div class="metric"><b>11 Sep</b><span>${l === 'en' ? 'certificate completed' : 'sertifikat selesai'}</span></div><div class="bars"><i></i><i></i><i></i><i></i></div></div><div class="body"><div class="topline"><span class="kicker">Data visualisation</span><span class="status">${l === 'en' ? 'COMPLETED · SEP 2026' : 'SELESAI · SEP 2026'}</span></div><h3>Tata Data Visualisation: Empowering Business with Effective Insights</h3><p>${copy[l].tata}</p><div class="tags"><span class="tag">Data Cleaning</span><span class="tag">Visualisation</span><span class="tag">Business Insights</span><span class="tag">Executive Communication</span></div><div class="projectActions"><a class="btn primary small" href="tata-data-visualisation.html">${l === 'en' ? 'View Case Study ↗' : 'Lihat Case Study ↗'}</a></div></div></article>`;
+  }
+
+  function labelCard(l) {
+    return `<article class="project injected-project show" data-injected-project="label"><div class="visual analyticsMock"><div class="analyticsTitle">FORAGE ACADEMY · DATA LABELING</div><div class="metric"><b>PII</b><span>${l === 'en' ? 'privacy awareness' : 'kesadaran privasi'}</span></div><div class="metric"><b>QC</b><span>review & iteration</span></div><div class="bars"><i></i><i></i><i></i><i></i></div></div><div class="body"><div class="topline"><span class="kicker">Data quality</span><span class="status">${l === 'en' ? 'COMPLETED · SEP 2026' : 'SELESAI · SEP 2026'}</span></div><h3>Forage Academy Data Labeling Job Simulation</h3><p>${copy[l].label}</p><div class="tags"><span class="tag">Data Labeling</span><span class="tag">PII Awareness</span><span class="tag">Quality Control</span><span class="tag">Consistency Review</span></div><div class="projectActions"><a class="btn primary small" href="data-labeling.html">${l === 'en' ? 'View Case Study ↗' : 'Lihat Case Study ↗'}</a></div></div></article>`;
   }
 
   function renderRecentProjects() {
     const grid = document.querySelector('#projects .projects');
-    if (!grid) return;
+    if (!grid) return false;
     grid.querySelectorAll('.injected-project').forEach(el => el.remove());
+    const l = lang();
     const holder = document.createElement('div');
-    holder.innerHTML = projectCard('label') + projectCard('tata');
+    holder.innerHTML = tataCard(l) + labelCard(l);
     const cards = Array.from(holder.children);
-    cards.reverse().forEach(card => grid.prepend(card));
+    const firstOldCard = grid.firstElementChild;
+    cards.forEach(card => grid.insertBefore(card, firstOldCard));
 
-    const forageProof = document.querySelector('.proofs .proof:nth-child(3)');
-    if (forageProof) {
-      const b = forageProof.querySelector('b');
-      const span = forageProof.querySelector('span');
-      if (b) b.textContent = '4';
-      if (span) span.textContent = language() === 'en' ? 'certified Forage job simulations completed' : 'job simulation Forage bersertifikat selesai';
+    const proof = document.querySelector('.proofs .proof:nth-child(3)');
+    if (proof) {
+      const value = proof.querySelector('b');
+      const text = proof.querySelector('span');
+      if (value) value.textContent = '4';
+      if (text) text.textContent = l === 'en' ? 'certified Forage job simulations completed' : 'job simulation Forage bersertifikat selesai';
+    }
+    return true;
+  }
+
+  function boot() {
+    if (!renderRecentProjects()) {
+      let tries = 0;
+      const timer = setInterval(() => {
+        tries += 1;
+        if (renderRecentProjects() || tries > 30) clearInterval(timer);
+      }, 100);
     }
   }
 
-  renderRecentProjects();
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', boot, { once: true });
+  } else {
+    boot();
+  }
+  window.addEventListener('load', renderRecentProjects, { once: true });
+
   const observer = new MutationObserver(mutations => {
     if (mutations.some(m => m.type === 'attributes' && m.attributeName === 'lang')) renderRecentProjects();
   });
