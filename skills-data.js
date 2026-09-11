@@ -88,16 +88,28 @@ window.PORTFOLIO_SKILLS = [
     return `<article class="project injected-project show" data-injected-project="label"><div class="visual analyticsMock"><div class="analyticsTitle">FORAGE ACADEMY · DATA LABELING</div><div class="metric"><b>PII</b><span>${l === 'en' ? 'privacy awareness' : 'kesadaran privasi'}</span></div><div class="metric"><b>QC</b><span>review & iteration</span></div><div class="bars"><i></i><i></i><i></i><i></i></div></div><div class="body"><div class="topline"><span class="kicker">Data quality</span><span class="status">${l === 'en' ? 'COMPLETED · SEP 2026' : 'SELESAI · SEP 2026'}</span></div><h3>Forage Academy Data Labeling Job Simulation</h3><p>${copy[l].label}</p><div class="tags"><span class="tag">Data Labeling</span><span class="tag">PII Awareness</span><span class="tag">Quality Control</span><span class="tag">Consistency Review</span></div><div class="projectActions"><a class="btn primary small" href="data-labeling.html">${l === 'en' ? 'View Case Study ↗' : 'Lihat Case Study ↗'}</a></div></div></article>`;
   }
 
+  function existingCard(grid, phrase) {
+    return Array.from(grid.querySelectorAll('.project:not(.injected-project)')).find(card => {
+      const h3 = card.querySelector('h3');
+      return h3 && h3.textContent.toLowerCase().includes(phrase.toLowerCase());
+    });
+  }
+
   function renderRecentProjects() {
     const grid = document.querySelector('#projects .projects');
     if (!grid) return false;
+
     grid.querySelectorAll('.injected-project').forEach(el => el.remove());
     const l = lang();
     const holder = document.createElement('div');
     holder.innerHTML = tataCard(l) + labelCard(l);
-    const cards = Array.from(holder.children);
-    const firstOldCard = grid.firstElementChild;
-    cards.forEach(card => grid.insertBefore(card, firstOldCard));
+    const tata = holder.children[0];
+    const label = holder.children[1];
+    const commonwealth = existingCard(grid, 'Commonwealth Bank');
+    const deloitte = existingCard(grid, 'Deloitte Australia');
+    const firstOriginal = grid.firstChild;
+
+    [tata, commonwealth, deloitte, label].filter(Boolean).forEach(card => grid.insertBefore(card, firstOriginal));
 
     const proof = document.querySelector('.proofs .proof:nth-child(3)');
     if (proof) {
@@ -106,7 +118,13 @@ window.PORTFOLIO_SKILLS = [
       if (value) value.textContent = '4';
       if (text) text.textContent = l === 'en' ? 'certified Forage job simulations completed' : 'job simulation Forage bersertifikat selesai';
     }
+
+    document.querySelectorAll('#projects .project, #contact .reveal').forEach(el => el.classList.add('show'));
     return true;
+  }
+
+  function revealFallback() {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('show'));
   }
 
   function boot() {
@@ -117,6 +135,7 @@ window.PORTFOLIO_SKILLS = [
         if (renderRecentProjects() || tries > 30) clearInterval(timer);
       }, 100);
     }
+    setTimeout(revealFallback, 1200);
   }
 
   if (document.readyState === 'loading') {
@@ -124,7 +143,11 @@ window.PORTFOLIO_SKILLS = [
   } else {
     boot();
   }
-  window.addEventListener('load', renderRecentProjects, { once: true });
+
+  window.addEventListener('load', () => {
+    renderRecentProjects();
+    setTimeout(revealFallback, 400);
+  }, { once: true });
 
   const observer = new MutationObserver(mutations => {
     if (mutations.some(m => m.type === 'attributes' && m.attributeName === 'lang')) renderRecentProjects();
